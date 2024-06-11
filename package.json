@@ -1,0 +1,36 @@
+{
+  "name": "css-optimiser-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/clean-css": "^4.2.11",
+    "@types/express": "^4.17.21",
+    "@types/node-cron": "^3.0.11",
+    "@types/uuid": "^9.0.8",
+    "critical": "^7.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.4"
+  },
+  "dependencies": {
+    "@swc/cli": "^0.3.12",
+    "@swc/core": "^1.4.13",
+    "@swc/helpers": "^0.5.8",
+    "@types/node": "^20.12.6",
+    "cssnano": "^7.0.0",
+    "express": "^4.19.2",
+    "nanoid": "^5.0.7",
+    "node-cron": "^3.0.3",
+    "node-html-parser": "^6.1.13",
+    "postcss": "^8.4.38",
+    "purgecss": "^6.0.0",
+    "swc-loader": "^0.2.6",
+    "uuid": "^9.0.1"
+  }
+}
