@@ -5,48 +5,74 @@ import postcss from "postcss";
 import cssnano from "cssnano";
 import path from "path";
 import { fetchText, removeComments, extractCSSURLs, retrieveCSSFiles, retrieveCSSFromTags } from "./utils";
-/*
-- Fetch a web URL as HTML
-- Using a regex, extract all CSS URLs
-- Fetch all CSS URLs
-- Also fetch css inside <style> tags on page
-- remove comments from the original HTML, and comments from the CSS
-- Save the CSS to a file as a benchmark to measure against
-- Purge the CSS using the HTML as our context
-- Save the purged CSS to a file
-- Excluded filenames will be passed as a ge aram to the endpoint
 
-*/
+class CSSOptimizer {
+  private url: string;
+  private excludedFiles: string[];
 
-const optimseCSS = async (url: string, excludedFiles: string[]): Promise<string> => {
-  const html = await fetchText(url);
-  const rawHTML = await removeComments(html);
-  const domain = new URL(url).host;
+  constructor(url: string, excludedFiles: string[]) {
+    this.url = url;
+    this.excludedFiles = excludedFiles;
+  }
 
-  const cssURLs = await extractCSSURLs(rawHTML, domain, excludedFiles);
-  const css = await retrieveCSSFiles(cssURLs);
-  // const inlineCSS = await retrieveCSSFromTags(rawHTML);
+  public async optimize(): Promise<string> {
+    const html = await this.fetchHTML();
+    const rawHTML = await this.removeComments(html);
+    const domain = new URL(this.url).host;
 
-  await fs.writeFile("all.css", css.join("\n\n"));
+    const cssURLs = await this.extractCSSURLs(rawHTML, domain);
+    const css = await this.retrieveCSSFiles(cssURLs);
 
-  const reducedCSS = await new PurgeCSS().purge({
-    content: [
-      {
-        raw: html,
-        extension: "html",
-      },
-    ],
-    css: ["all.css"],
-  });
+    await this.saveCSSToFile(css);
 
-  const destinationFolder = `public/`;
-  const filename = `${uuidv4()}.css`;
+    const reducedCSS = await this.purgeCSS(html);
 
-  const optimised = await postcss([cssnano()]).process(reducedCSS[0].css, { from: undefined });
-  await fs.writeFile(path.resolve(`${destinationFolder}/${filename}`), optimised.css);
+    const filename = await this.saveOptimizedCSS(reducedCSS);
 
-  console.log("Completed");
-  return filename;
-};
+    console.log("Completed");
+    return filename;
+  }
 
-export default optimseCSS;
+  private async fetchHTML(): Promise<string> {
+    return fetchText(this.url);
+  }
+
+  private async removeComments(html: string): Promise<string> {
+    return removeComments(html);
+  }
+
+  private async extractCSSURLs(rawHTML: string, domain: string): Promise<string[]> {
+    return extractCSSURLs(rawHTML, domain, this.excludedFiles);
+  }
+
+  private async retrieveCSSFiles(cssURLs: string[]): Promise<string[]> {
+    return retrieveCSSFiles(cssURLs);
+  }
+
+  private async saveCSSToFile(css: string[]): Promise<void> {
+    await fs.writeFile("all.css", css.join("\n\n"));
+  }
+
+  private async purgeCSS(html: string): Promise<any[]> {
+    return new PurgeCSS().purge({
+      content: [
+        {
+          raw: html,
+          extension: "html",
+        },
+      ],
+      css: ["all.css"],
+    });
+  }
+
+  private async saveOptimizedCSS(reducedCSS: any[]): Promise<string> {
+    const destinationFolder = `public/`;
+    const filename = `${uuidv4()}.css`;
+
+    const optimised = await postcss([cssnano()]).process(reducedCSS[0].css, { from: undefined });
+    await fs.writeFile(path.resolve(`${destinationFolder}/${filename}`), optimised.css);
+    return filename;
+  }
+}
+
+export default CSSOptimizer;

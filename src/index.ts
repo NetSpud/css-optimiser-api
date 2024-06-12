@@ -20,13 +20,15 @@ app.post("/optimise", async (req, res) => {
     if (!url) {
       return res.status(400).json({ error: "URL is required" });
     }
-    const optimisedCSS = await optimseCSS(url + "?performance_mode=false", excludedFiles); //don't load the existing performance mode of the page when trying to optimise
+    // const optimisedCSS = await optimseCSS(url + "?performance_mode=false", excludedFiles); //don't load the existing performance mode of the page when trying to optimise
+    const t = new optimseCSS(url + "?performance_mode=false", excludedFiles);
+    const filename = await t.optimize();
 
-    res.json({ css: optimisedCSS });
+    res.json({ css: filename });
 
     const date = new Date();
     date.setMinutes(date.getMinutes() + 5); //delete after 5 mins
-    slatedFiles.push({ filename: "public/" + optimisedCSS, timestamp: date.getTime() }); //add to "slating" array
+    slatedFiles.push({ filename: "public/" + filename, timestamp: date.getTime() }); //add to "slating" array
   } catch (error) {
     const errorhandle = error as Record<string, any>;
 
