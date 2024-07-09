@@ -42,7 +42,7 @@ const retrieveCSSFiles = async (urls: string[]): Promise<string[]> => {
   return replaced;
 };
 
-const extractCSSURLs = (html: string, rootdomain: string, excludedUrls: string[]): string[] => {
+const extractCSSURLs = (html: string, excludedUrls: string[]): string[] => {
   if (!html) return [];
 
   const parsed = parse(html);

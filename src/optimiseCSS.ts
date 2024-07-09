@@ -21,9 +21,8 @@ import { fetchText, removeComments, extractCSSURLs, retrieveCSSFiles, retrieveCS
 const optimseCSS = async (url: string, excludedFiles: string[]): Promise<string> => {
   const html = await fetchText(url);
   const rawHTML = await removeComments(html);
-  const domain = new URL(url).host;
 
-  const cssURLs = await extractCSSURLs(rawHTML, domain, excludedFiles);
+  const cssURLs = await extractCSSURLs(rawHTML, excludedFiles);
   const css = await retrieveCSSFiles(cssURLs);
   // const inlineCSS = await retrieveCSSFromTags(rawHTML);
 
