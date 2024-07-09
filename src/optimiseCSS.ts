@@ -14,7 +14,7 @@ import { fetchText, removeComments, extractCSSURLs, retrieveCSSFiles, retrieveCS
 - Save the CSS to a file as a benchmark to measure against
 - Purge the CSS using the HTML as our context
 - Save the purged CSS to a file
-- Excluded filenames will be passed as a ge aram to the endpoint
+- Excluded filenames will be passed as a get param to the endpoint
 
 */
 
