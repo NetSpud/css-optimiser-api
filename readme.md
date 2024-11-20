@@ -17,3 +17,11 @@ Move the existing `.example.env` file to `.env` and change the values as require
 ## Running the API
 
 Run `npm start` to start the API. The API will be available at whatever port is specified in your `.env` file, which by default is `3000`
+
+## Developing with Docker
+
+Configuration files are already included for Docker. To run the API in a Docker container, run the following command:
+
+```sh
+docker compose up --build
+```
