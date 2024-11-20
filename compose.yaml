@@ -1,0 +1,11 @@
+services:
+  server:
+    build:
+      context: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app # Bind mount the current directory for live code updates
+      - /usr/src/app/node_modules # Prevent overwriting node_modules with an empty host folder
