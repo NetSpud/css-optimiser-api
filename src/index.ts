@@ -17,7 +17,6 @@ const schema = z.object({
 });
 
 app.post("/optimise", async (req, res) => {
-  console.log(req.body);
   try {
     const data = await schema.parseAsync(req.body);
     const { url, api_token } = data;
@@ -25,6 +24,7 @@ app.post("/optimise", async (req, res) => {
       .split(",")
       .map((x: string) => x.trim())
       .filter((x: string) => x);
+
     if (!url) {
       return res.status(400).json({ error: "URL is required" });
     }
