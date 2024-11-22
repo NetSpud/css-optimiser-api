@@ -11,7 +11,7 @@ import { fetchText, removeComments, extractCSSURLs, retrieveCSSFiles, retrieveCS
 - Fetch all CSS URLs
 - Also fetch css inside <style> tags on page
 - remove comments from the original HTML, and comments from the CSS
-- Save the CSS to a file as a benchmark to measure against
+- Save the CSS to a file as a benchmark to measure against and to avoid storing it in large memory amount
 - Purge the CSS using the HTML as our context
 - Save the purged CSS to a file
 - Excluded filenames will be passed as a get param to the endpoint
@@ -38,13 +38,11 @@ const optimseCSS = async (url: string, excludedFiles: string[]): Promise<string>
     css: ["all.css"],
   });
 
-  const destinationFolder = `public/`;
   const filename = `${uuidv4()}.css`;
 
   const optimised = await postcss([cssnano()]).process(reducedCSS[0].css, { from: undefined });
-  await fs.writeFile(path.resolve(`${destinationFolder}/${filename}`), optimised.css);
+  await fs.writeFile(path.resolve(`${process.env.DEST_DIR}/${filename}`), optimised.css);
 
-  console.log("Completed");
   return filename;
 };
 

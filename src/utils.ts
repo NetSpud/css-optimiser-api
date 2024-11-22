@@ -11,7 +11,6 @@ const fetchText = async (url: string): Promise<string> => {
 };
 
 const retrieveCSSFiles = async (urls: string[]): Promise<string[]> => {
-  console.log("URLS", urls);
   if (!urls) return [];
   //ignore any external css files
 

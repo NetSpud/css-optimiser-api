@@ -3,6 +3,7 @@ import optimseCSS from "./optimiseCSS";
 import cron from "node-cron";
 import "dotenv/config";
 import { z } from "zod";
+import { hashFile } from "./hash";
 
 const app = express();
 app.use(express.json());
@@ -33,13 +34,13 @@ app.post("/optimise", async (req, res) => {
       return res.status(401).json({ error: "Invalid API token" });
     }
 
-    const optimisedCSS = await optimseCSS(url + "?performance_mode=false", excludedFiles); //don't load the existing performance mode of the page when trying to optimise
+    const filename = await optimseCSS(url + "?performance_mode=false", excludedFiles); //don't load the existing performance mode of the page when trying to optimise
+    const hash = await hashFile(filename);
 
-    res.json({ css: optimisedCSS });
+    console.log("optimised file", filename, hash);
 
-    const date = new Date();
-    date.setMinutes(date.getMinutes() + 5); //delete after 5 mins
-    slatedFiles.push({ filename: "public/" + optimisedCSS, timestamp: date.getTime() }); //add to "slating" array
+    res.json({ css: filename, hash: hash });
+    scheduleFileRemoval(filename);
   } catch (error) {
     const errorhandle = error as Record<string, any>;
 
@@ -52,7 +53,13 @@ app.post("/optimise", async (req, res) => {
   }
 });
 
-const removalInterval = process.env.REMOVAL_INTERVAL || "*/5 * * * *";
+const scheduleFileRemoval = (filename: string) => {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() + 5); //delete after 5 mins
+  slatedFiles.push({ filename: `${process.env.DEST_DIR}/${filename}`, timestamp: date.getTime() }); //add to "slating" array
+};
+
+const removalInterval = process.env.REMOVAL_INTERVAL || "*/5 * * * *"; //default to every 5 mins if not set
 
 cron.schedule(removalInterval, () => {
   //check to see if it's time to delete file, and if so, delete, else skip
