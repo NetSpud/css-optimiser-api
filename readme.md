@@ -16,9 +16,9 @@ Move the existing `.example.env` file to `.env` and change the values as require
 
 ```
 PORT=3000
-REMOVAL_INTERVAL=*/5 * * * *  (use crontab.guru to set a different interval)
+REMOVAL_INTERVAL=*/5 * * * *  # (use crontab.guru to set a different interval)
 API_TOKEN=your_api_token
-DEST_DIR=public (or alternative directory)
+DEST_DIR=public # (or alternative directory)
 ```
 
 ## Running the API
