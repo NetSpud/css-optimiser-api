@@ -31,5 +31,10 @@ Configuration files are already included for Docker. To run the API in a Docker 
 
 ```sh
 docker compose up dev --build # for dev environment
+```
+
+or
+
+```sh
 docker compose up prod --build # for production environment
 ```
