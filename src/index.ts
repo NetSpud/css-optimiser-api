@@ -37,12 +37,13 @@ app.post("/optimise", async (req, res) => {
     const filename = await optimseCSS(url + "?performance_mode=false", excludedFiles); //don't load the existing performance mode of the page when trying to optimise
     const hash = await hashFile(filename);
 
-    console.log("optimised file", filename, hash);
+    console.log(`Optimised file: ${filename}\n Hash: ${hash}`);
 
     res.json({ css: filename, hash: hash });
     scheduleFileRemoval(filename);
   } catch (error) {
     const errorhandle = error as Record<string, any>;
+    console.log(errorhandle);
 
     if (["CssSyntaxError"].includes(errorhandle.name)) {
       return res.status(400).json({ error: "There was a syntax error in the CSS", details: errorhandle });

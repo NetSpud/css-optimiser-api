@@ -25,7 +25,6 @@ const optimseCSS = async (url: string, excludedFiles: string[]): Promise<string>
   const cssURLs = await extractCSSURLs(rawHTML, excludedFiles);
   const css = await retrieveCSSFiles(cssURLs);
   // const inlineCSS = await retrieveCSSFromTags(rawHTML);
-
   await fs.writeFile("all.css", css.join("\n\n"));
 
   const reducedCSS = await new PurgeCSS().purge({
