@@ -1,33 +1,25 @@
 # syntax=docker/dockerfile:1
-
-# Use a specific Node.js version
 ARG NODE_VERSION=20.12.2
-
-FROM node:${NODE_VERSION}-alpine
-
-# Set environment to development (change to 'production' for production builds)
-ENV NODE_ENV=development
-
-# Set working directory inside the container
-WORKDIR /usr/src/app
-
-# Copy package files separately to leverage Docker caching
-COPY package.json yarn.lock ./
-
-# Install dependencies (includes dev dependencies in development mode)
+FROM node:${NODE_VERSION}-alpine AS base
+WORKDIR /home/node/app
+RUN chown -R node:node /home/node/app
+COPY --chown=node:node package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
-
-# Globally install development tools if needed
-RUN npm install -g nodemon ts-node
-
-# Copy the rest of the application source code
-COPY . .
-
-# Ensure a non-root user is used to run the application
-USER node
-
-# Expose the application's port
+COPY --chown=node:node . .
 EXPOSE 3000
 
-# Command to start the application
+# Development build
+FROM base AS dev
+ENV NODE_ENV=development
+RUN npm install -g nodemon ts-node
+USER node
 CMD ["yarn", "dev"]
+
+# Production build
+FROM base AS prod
+ENV NODE_ENV=production
+USER node
+RUN mkdir build
+RUN chown -R node:node build
+RUN yarn build
+CMD ["yarn", "start"]

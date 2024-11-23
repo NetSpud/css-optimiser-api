@@ -1,11 +1,19 @@
 services:
-  server:
+  prod:
     build:
       context: .
-    environment:
-      NODE_ENV: development
+      target: prod
     ports:
       - "3000:3000"
     volumes:
-      - .:/usr/src/app # Bind mount the current directory for live code updates
-      - /usr/src/app/node_modules # Prevent overwriting node_modules with an empty host folder
+      - .:/home/node/app # Bind mount the current directory for live code updates
+      - /home/node/app/node_modules # Prevent overwriting node_modules with an empty host folder
+  dev:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home/node/app # Bind mount the current directory for live code updates
+      - /home/node/app/node_modules # Prevent overwriting node_modules with an empty host folder
