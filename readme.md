@@ -25,10 +25,11 @@ DEST_DIR=public # (or alternative directory)
 
 Run `npm start` to start the API. The API will be available at whatever port is specified in your `.env` file, which by default is `3000`
 
-## Developing with Docker
+## Running with Docker
 
 Configuration files are already included for Docker. To run the API in a Docker container, run the following command:
 
 ```sh
-docker compose up --build
+docker compose up dev --build # for dev environment
+docker compose up prod --build # for production environment
 ```
