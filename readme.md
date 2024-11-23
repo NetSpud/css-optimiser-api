@@ -1,6 +1,6 @@
 # CSS Optimisation API
 
-This is the API for the CSS Optimisation project.
+This is the API for the CSS Optimisation [Wordpress Plugin](https://github.com/NetSpud/wp-css-optimise).
 
 ## Installation
 
@@ -38,3 +38,5 @@ or
 ```sh
 docker compose up prod --build # for production environment
 ```
+
+Please note that the Docker files make use of yarn instead of npm.
