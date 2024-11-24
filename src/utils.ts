@@ -4,7 +4,7 @@ const fetchText = async (url: string): Promise<string> => {
   const f = await fetch(url);
   if (!f.ok) {
     console.error(`Failed to fetch ${url}\nSKIPPING`);
-    return "";
+    throw new Error(`Failed to fetch ${url}`);
   }
   const j = await f.text();
   return j;
